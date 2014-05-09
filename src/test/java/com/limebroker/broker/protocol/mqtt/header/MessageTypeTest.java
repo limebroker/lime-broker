@@ -4,6 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+/**
+ * MessageType Tests
+ * 
+ * @author Martyn Taylor <mtaylor@redhat.com>
+ * 
+ */
 public class MessageTypeTest {
 
     @Test

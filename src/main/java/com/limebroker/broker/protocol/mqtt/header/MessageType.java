@@ -1,5 +1,11 @@
 package com.limebroker.broker.protocol.mqtt.header;
 
+/**
+ * MessageType Enum represents MQTT Fixed Header Message Type
+ * 
+ * @author Martyn Taylor <mtaylor@redhat.com>
+ * 
+ */
 public enum MessageType {
     CONNECT((byte) 1), CONNACK((byte) 2), PUBLISH((byte) 3), PUBACK((byte) 4), PUBREC(
             (byte) 5), PUBREL((byte) 6), PUBCOMP((byte) 7), SUBSCRIBE((byte) 8), SUBACK(
