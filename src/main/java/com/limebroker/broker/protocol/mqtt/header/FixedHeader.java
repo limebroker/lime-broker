@@ -15,24 +15,44 @@ import com.limebroker.broker.LimeBrokerException;
 public class FixedHeader {
 
     // Max length of MQTT message in bytes.
-    public static long MAX_LENGTH = 268435455;
+    public static int MAX_LENGTH = 268435455;
 
-    private enum MessageType {
-        CONNECT, CONNACK, PUBLISH, PUBACK, PUBREC, PUBREL, PUBCOMP, SUBSCRIBE, UNSUBSCRIBE, UNSUBACK, PINGREQ, PINGRESP, DISCONNECT
-    }
+    // First byte of the header.
+    private byte byte1;
 
-    private enum QoSLevel {
-        AT_MOST_ONCE, AT_LEAST_ONCE, EXACTLY_ONCE
-    }
-
-    private MessageType messageType;
-    private QoSLevel qosLevel;
-    private boolean duplicate;
-    private boolean retain;
+    // Remaining Length value of this
     private int remainingLength;
 
-    private FixedHeader() {
-    };
+    /**
+     * Creates new Fixed Header instance by reading header from ByteBuf.
+     * 
+     * @param buf
+     * @return
+     * @throws LimeBrokerException
+     */
+    public static FixedHeader readFixedHeader(ByteBuf buf)
+            throws LimeBrokerException {
+        FixedHeader fh = new FixedHeader();
+        fh.byte1 = buf.readByte();
+        fh.remainingLength = decodeRemainingLength(buf);
+        return fh;
+    }
+
+    /**
+     * Creates new Fixed Header instance by setting byte flags and remaining
+     * length.
+     * 
+     * @param buf
+     * @return
+     * @throws LimeBrokerException
+     */
+    public static FixedHeader createFixedHeader(byte byte1, int remainingLength)
+            throws LimeBrokerException {
+        FixedHeader fh = new FixedHeader();
+        fh.byte1 = byte1;
+        fh.remainingLength = remainingLength;
+        return fh;
+    }
 
     /**
      * Converts an integer to the variable length encoding of MQTT and writes
@@ -42,7 +62,7 @@ public class FixedHeader {
      * @return byte[]
      * @throws LimeBrokerException
      */
-    public static void encodeRemainingLength(long length, ByteBuffer buffer)
+    public static void encodeRemainingLength(int length, ByteBuf buffer)
             throws LimeBrokerException {
         checkLength(length);
         do {
@@ -51,7 +71,7 @@ public class FixedHeader {
             if (length > 0) {
                 digit = (byte) (digit | 0x80);
             }
-            buffer.put(digit);
+            buffer.writeByte(digit);
         } while (length > 0);
     }
 
@@ -63,13 +83,13 @@ public class FixedHeader {
      * @return byte[]
      * @throws LimeBrokerException
      */
-    public static long decodeRemainingLength(ByteBuffer buffer)
+    public static int decodeRemainingLength(ByteBuf buffer)
             throws LimeBrokerException {
-        long multiplier = 1;
-        long length = 0;
+        int multiplier = 1;
+        int length = 0;
         byte digit;
         do {
-            digit = buffer.get();
+            digit = buffer.readByte();
             length += (digit & 127) * multiplier;
             multiplier *= 128;
         } while ((digit & 128) != 0);
@@ -91,5 +111,50 @@ public class FixedHeader {
                     "Message length exceeds maximum length: " + MAX_LENGTH
                             + "bytes");
         }
+    }
+
+    /**
+     * Gets the Message Type of this MQTT Message Header
+     * 
+     * @return
+     */
+    public MessageType getMessageType() {
+        return MessageType.getMessageTypeFromWireByte(byte1);
+    }
+
+    /**
+     * Gets the QoSLevel of this MQTT Message Header
+     * 
+     * @return
+     */
+    public QoSLevel getQoSLevel() {
+        return QoSLevel.getQoSFromByte(byte1);
+    }
+
+    /**
+     * Get the retain flag of this MQTT Message Header
+     * 
+     * @return
+     */
+    public boolean getRetain() {
+        return (byte1 & 0b00000001) != 0;
+    }
+
+    /**
+     * Get the Duplicate flag of this MQTT Message Header
+     * 
+     * @return
+     */
+    public boolean getDupFlag() {
+        return (byte1 & 0b00001000) != 0;
+    }
+
+    /**
+     * Get the Remaining Length in bytes for the MQTT Message.
+     * 
+     * @return
+     */
+    public int getRemainingLength() {
+        return remainingLength;
     }
 }
