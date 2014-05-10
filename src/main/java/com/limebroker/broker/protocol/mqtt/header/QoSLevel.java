@@ -56,4 +56,17 @@ public enum QoSLevel {
         code &= 0b00000011;
         return valueOf(code);
     }
+
+    /**
+     * Returns a QoS enum from bit 3 and 4 of the connect header byte (Big
+     * Endian) as it would be received over the wire.
+     * 
+     * @param code
+     * @return
+     */
+    public static QoSLevel getWillQoSFromByte(byte code) {
+        code >>>= 3;
+        code &= 0b00000011;
+        return valueOf(code);
+    }
 }

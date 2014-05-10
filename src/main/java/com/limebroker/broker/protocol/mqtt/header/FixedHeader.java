@@ -2,8 +2,6 @@ package com.limebroker.broker.protocol.mqtt.header;
 
 import io.netty.buffer.ByteBuf;
 
-import java.nio.ByteBuffer;
-
 import com.limebroker.broker.LimeBrokerException;
 
 /**
