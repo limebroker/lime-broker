@@ -14,7 +14,7 @@ import io.netty.buffer.ByteBufInputStream;
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  * 
  */
-public class ConnectHeader {
+public class ConnectHeader extends VariableHeader {
 
     public static final String PROTOCOL_NAME = "MQIsdp";
 
