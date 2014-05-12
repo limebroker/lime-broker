@@ -2,6 +2,8 @@ package com.limebroker.broker.protocol.mqtt.header;
 
 import java.io.IOException;
 
+import com.limebroker.broker.protocol.mqtt.Util;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 
@@ -11,7 +13,7 @@ import io.netty.buffer.ByteBufInputStream;
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  * 
  */
-public class PublishHeader extends VariableHeader {
+public class PublishHeader extends MessageIDHeader {
 
     private String topicName;
 
@@ -31,18 +33,32 @@ public class PublishHeader extends VariableHeader {
     }
 
     /**
+     * Create new Publish Header with a message Id.
+     * 
+     * @param topicName
+     * @return
+     */
+    public static PublishHeader createPublishHeader(String topicName,
+            int messageId) {
+        PublishHeader ph = PublishHeader.createPublishHeader(topicName);
+        ph.messageId = messageId;
+        return ph;
+    }
+
+    /**
      * Read a Publish Header from a ByteBuf
      * 
      * @param buf
      * @return
      * @throws IOException
      */
-    public static PublishHeader readPublishHeader(ByteBuf buf)
-            throws IOException {
+    public static PublishHeader readPublishHeader(ByteBuf buf,
+            FixedHeader header) throws IOException {
         ByteBufInputStream is = new ByteBufInputStream(buf);
         PublishHeader ph = new PublishHeader();
         try {
             ph.topicName = is.readUTF();
+            ph.messageId = readMessageId(header, buf);
         } finally {
             is.close();
         }

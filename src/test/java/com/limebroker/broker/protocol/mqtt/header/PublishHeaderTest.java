@@ -26,7 +26,8 @@ public class PublishHeaderTest {
         try {
             String topicName = "My Topic Name";
             os.writeUTF(topicName);
-            PublishHeader ph = PublishHeader.readPublishHeader(buf);
+            FixedHeader fh = FixedHeader.createFixedHeader((byte) 0, 0);
+            PublishHeader ph = PublishHeader.readPublishHeader(buf, fh);
             assertEquals(topicName, ph.getTopicName());
         } finally {
             os.close();
