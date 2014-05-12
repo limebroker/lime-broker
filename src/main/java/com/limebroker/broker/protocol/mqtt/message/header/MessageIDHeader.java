@@ -1,4 +1,4 @@
-package com.limebroker.broker.protocol.mqtt.header;
+package com.limebroker.broker.protocol.mqtt.message.header;
 
 import io.netty.buffer.ByteBuf;
 

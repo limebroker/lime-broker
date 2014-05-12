@@ -12,6 +12,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.limebroker.broker.LimeBrokerException;
+import com.limebroker.broker.protocol.mqtt.message.header.FixedHeader;
 
 /**
  * FixedHeader Tests

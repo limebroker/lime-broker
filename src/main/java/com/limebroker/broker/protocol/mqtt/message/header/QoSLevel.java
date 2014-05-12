@@ -1,4 +1,4 @@
-package com.limebroker.broker.protocol.mqtt.header;
+package com.limebroker.broker.protocol.mqtt.message.header;
 
 /**
  * Represents Quality of Service flag in MQTT Header

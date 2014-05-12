@@ -1,4 +1,4 @@
-package com.limebroker.broker.protocol.mqtt.header;
+package com.limebroker.broker.protocol.mqtt.message.header;
 
 /**
  * MessageType Enum represents MQTT Fixed Header Message Type

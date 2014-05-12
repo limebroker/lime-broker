@@ -9,6 +9,8 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.limebroker.broker.LimeBrokerException;
+import com.limebroker.broker.protocol.mqtt.message.header.ConnectAckHeader;
+import com.limebroker.broker.protocol.mqtt.message.header.ConnectReturnCode;
 
 /**
  * Connect Ack Header Tests

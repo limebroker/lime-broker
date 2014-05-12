@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.limebroker.broker.protocol.mqtt.message.header.ConnectReturnCode;
+
 /**
  * Connect Return Code Tests
  * 
