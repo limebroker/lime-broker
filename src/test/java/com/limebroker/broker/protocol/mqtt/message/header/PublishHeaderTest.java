@@ -10,14 +10,12 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.limebroker.broker.LimeBrokerException;
-import com.limebroker.broker.protocol.mqtt.message.header.FixedHeader;
-import com.limebroker.broker.protocol.mqtt.message.header.PublishHeader;
 
 /**
  * Publish Header Tests
- * 
+ *
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- * 
+ *
  */
 public class PublishHeaderTest {
 

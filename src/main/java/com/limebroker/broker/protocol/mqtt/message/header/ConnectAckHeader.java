@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 
 /**
  * Represents MQTT Connect Ack Header
- * 
+ *
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- * 
+ *
  */
 public class ConnectAckHeader extends VariableHeader {
 
@@ -17,12 +17,11 @@ public class ConnectAckHeader extends VariableHeader {
 
     /**
      * Create new Connect Ack Header.
-     * 
+     *
      * @param returnCode
      * @return
      */
-    public static ConnectAckHeader createConnectAckHeader(
-            ConnectReturnCode returnCode) {
+    public static ConnectAckHeader createConnectAckHeader(ConnectReturnCode returnCode) {
         ConnectAckHeader cah = new ConnectAckHeader();
         cah.returnCode = returnCode.getCode();
         return cah;
@@ -30,7 +29,7 @@ public class ConnectAckHeader extends VariableHeader {
 
     /**
      * Read a Connect Ack Header from a ByteBuf
-     * 
+     *
      * @param buf
      * @return
      */
@@ -42,7 +41,7 @@ public class ConnectAckHeader extends VariableHeader {
 
     /**
      * Retried the Connect Return Code for this message.
-     * 
+     *
      * @return
      */
     public ConnectReturnCode getConnectReturnCode() {

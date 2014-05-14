@@ -12,13 +12,12 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.limebroker.broker.LimeBrokerException;
-import com.limebroker.broker.protocol.mqtt.message.header.FixedHeader;
 
 /**
  * FixedHeader Tests
- * 
+ *
  * @author Martyn Taylor <mtaylor@redhat.com>
- * 
+ *
  */
 public class FixedHeaderTest {
     private Map<Integer, byte[]> generateRequiredLengthTestData() {
@@ -26,23 +25,18 @@ public class FixedHeaderTest {
         m.put(Integer.valueOf(0), new byte[] { 0x00 });
         m.put(Integer.valueOf(127), new byte[] { 0x7F });
         m.put(Integer.valueOf(128), new byte[] { (byte) 0x80, 0x01 });
-        m.put(Integer.valueOf(16384), new byte[] { (byte) 0x80, (byte) 0x80,
-                0x01 });
-        m.put(Integer.valueOf(2097152), new byte[] { (byte) 0x80, (byte) 0x80,
-                (byte) 0x80, 0x01 });
-        m.put(Integer.valueOf(FixedHeader.MAX_LENGTH), new byte[] {
-                (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, 0x7F });
+        m.put(Integer.valueOf(16384), new byte[] { (byte) 0x80, (byte) 0x80, 0x01 });
+        m.put(Integer.valueOf(2097152), new byte[] { (byte) 0x80, (byte) 0x80, (byte) 0x80, 0x01 });
+        m.put(Integer.valueOf(FixedHeader.MAX_LENGTH), new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, 0x7F });
         return m;
     }
 
     @Test
     public void encodeRemainingLengthTest() {
         try {
-            for (Map.Entry<Integer, byte[]> entry : generateRequiredLengthTestData()
-                    .entrySet()) {
+            for (Map.Entry<Integer, byte[]> entry : generateRequiredLengthTestData().entrySet()) {
                 ByteBuf buffer = Unpooled.buffer(entry.getValue().length);
-                FixedHeader.encodeRemainingLength(entry.getKey().intValue(),
-                        buffer);
+                FixedHeader.encodeRemainingLength(entry.getKey().intValue(), buffer);
                 assertArrayEquals(entry.getValue(), buffer.array());
             }
         } catch (LimeBrokerException e) {
@@ -53,8 +47,7 @@ public class FixedHeaderTest {
     @Test
     public void decodeRemainingLengthTest() {
         try {
-            for (Map.Entry<Integer, byte[]> entry : generateRequiredLengthTestData()
-                    .entrySet()) {
+            for (Map.Entry<Integer, byte[]> entry : generateRequiredLengthTestData().entrySet()) {
                 ByteBuf buffer = Unpooled.buffer(entry.getValue().length);
                 for (byte b : entry.getValue()) {
                     buffer.writeByte(b);
@@ -70,8 +63,7 @@ public class FixedHeaderTest {
     @Test
     public void getRetainTest() {
         try {
-            FixedHeader fh = FixedHeader
-                    .createFixedHeader((byte) 0b00001111, 0);
+            FixedHeader fh = FixedHeader.createFixedHeader((byte) 0b00001111, 0);
             assertEquals(true, fh.getRetain());
 
             fh = FixedHeader.createFixedHeader((byte) 0b0000110, 0);
@@ -84,8 +76,7 @@ public class FixedHeaderTest {
     @Test
     public void getDupFlagTest() {
         try {
-            FixedHeader fh = FixedHeader
-                    .createFixedHeader((byte) 0b11111000, 0);
+            FixedHeader fh = FixedHeader.createFixedHeader((byte) 0b11111000, 0);
             assertEquals(true, fh.getDupFlag());
 
             fh = FixedHeader.createFixedHeader((byte) 0b1000110, 0);

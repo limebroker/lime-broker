@@ -10,14 +10,12 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.limebroker.broker.LimeBrokerException;
-import com.limebroker.broker.protocol.mqtt.message.header.ConnectHeader;
-import com.limebroker.broker.protocol.mqtt.message.header.QoSLevel;
 
 /**
  * ConnectHeader Tests
- * 
+ *
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- * 
+ *
  */
 public class ConnectHeaderTest {
 

@@ -2,12 +2,14 @@ package com.limebroker.broker.protocol.mqtt.message.header;
 
 /**
  * Represents Quality of Service flag in MQTT Header
- * 
+ *
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- * 
+ *
  */
 public enum QoSLevel {
-    AT_MOST_ONCE((byte) 0), AT_LEAST_ONCE((byte) 1), EXACTLY_ONCE((byte) 2);
+    AT_MOST_ONCE((byte) 0),
+    AT_LEAST_ONCE((byte) 1),
+    EXACTLY_ONCE((byte) 2);
 
     private static QoSLevel[] qos;
 
@@ -32,7 +34,7 @@ public enum QoSLevel {
 
     /**
      * Returns a QoS based on QoS Value outlined in MQTT Spec wire.
-     * 
+     *
      * @param code
      * @return
      */
@@ -45,9 +47,8 @@ public enum QoSLevel {
     }
 
     /**
-     * Returns a QoS enum from bit 6 and 7 of the byte (Big Endian) as it would
-     * be received over the wire.
-     * 
+     * Returns a QoS enum from bit 6 and 7 of the byte (Big Endian) as it would be received over the wire.
+     *
      * @param code
      * @return
      */
@@ -58,9 +59,8 @@ public enum QoSLevel {
     }
 
     /**
-     * Returns a QoS enum from bit 3 and 4 of the connect header byte (Big
-     * Endian) as it would be received over the wire.
-     * 
+     * Returns a QoS enum from bit 3 and 4 of the connect header byte (Big Endian) as it would be received over the wire.
+     *
      * @param code
      * @return
      */

@@ -1,18 +1,18 @@
 package com.limebroker.broker.protocol.mqtt.message.header;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+
 import java.io.IOException;
 
 import com.limebroker.broker.LimeBrokerException;
 import com.limebroker.broker.protocol.mqtt.Util;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-
 /**
  * Represents a variable header of a CONNECT message
- * 
+ *
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- * 
+ *
  */
 public class ConnectHeader extends VariableHeader {
 
@@ -35,13 +35,12 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Creates a new Connect Header based on the given paramaters.
-     * 
+     *
      * @param connectFlags
      * @param keepAliveTimer
      * @return
      */
-    public static ConnectHeader getConnectHeader(byte connectFlags,
-            int keepAliveTimer) {
+    public static ConnectHeader getConnectHeader(byte connectFlags, int keepAliveTimer) {
         ConnectHeader ch = new ConnectHeader();
         ch.protocolName = PROTOCOL_NAME;
         ch.protocolVersion = PROTOCOL_VERSION;
@@ -51,16 +50,14 @@ public class ConnectHeader extends VariableHeader {
     }
 
     /**
-     * Read a connect header from a ByteBuf bytes and create a Connect Header
-     * object
-     * 
+     * Read a connect header from a ByteBuf bytes and create a Connect Header object
+     *
      * @param buf
      * @return
      * @throws LimeBrokerException
      * @throws IOException
      */
-    public static ConnectHeader readConnectHeader(ByteBuf buf)
-            throws LimeBrokerException, IOException {
+    public static ConnectHeader readConnectHeader(ByteBuf buf) throws LimeBrokerException, IOException {
         ByteBufInputStream inputStream = new ByteBufInputStream(buf);
         try {
             ConnectHeader ch = new ConnectHeader();
@@ -70,8 +67,7 @@ public class ConnectHeader extends VariableHeader {
             ch.keepAliveTimer = Util.unsignedShortToInt(buf.readShort());
             return ch;
         } catch (IOException e) {
-            throw new LimeBrokerException(
-                    "Unable to read protocol name from buffer");
+            throw new LimeBrokerException("Unable to read protocol name from buffer");
         } finally {
             inputStream.close();
         }
@@ -79,7 +75,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the Connect message Keep Alive Timer for this connect message.
-     * 
+     *
      * @return
      */
     public int getKeepAliveTimer() {
@@ -88,7 +84,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the Protocol Name for this Connect Message. Should always be MQIsdp.
-     * 
+     *
      * @return
      */
     public String getProtocolName() {
@@ -97,7 +93,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the protocol version of this connect message.
-     * 
+     *
      * @return
      */
     public byte getProtocolVersion() {
@@ -106,7 +102,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the all connect flags as byte for this connect header.
-     * 
+     *
      * @return
      */
     public byte getConnectFlags() {
@@ -114,9 +110,8 @@ public class ConnectHeader extends VariableHeader {
     }
 
     /**
-     * Get the will quality of service level for this connect message. See MQTT
-     * Spec for more details on this flag.
-     * 
+     * Get the will quality of service level for this connect message. See MQTT Spec for more details on this flag.
+     *
      * @return
      */
     public QoSLevel getWillQoS() {
@@ -125,7 +120,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Gets the username flag. See MQTT Spec for more details on this flag.
-     * 
+     *
      * @return
      */
     public boolean getUsernameFlag() {
@@ -134,7 +129,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Returns password flag. See MQTT Spec for more details on this flag.
-     * 
+     *
      * @return
      */
     public boolean getPasswordFlag() {
@@ -143,7 +138,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Returns Will Retain Flag. See MQTT Spec for more details on this flag.
-     * 
+     *
      * @return
      */
     public boolean getWillRetainFlag() {
@@ -152,7 +147,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Returns the Will Flag. See MQTT Spec for more details on this flag.
-     * 
+     *
      * @return
      */
     public boolean getWillFlag() {
@@ -160,9 +155,8 @@ public class ConnectHeader extends VariableHeader {
     }
 
     /**
-     * Returns the clean session flag. See MQTT Spec for more details on this
-     * flag.
-     * 
+     * Returns the clean session flag. See MQTT Spec for more details on this flag.
+     *
      * @return
      */
     public boolean getCleanSessionFlag() {
@@ -171,7 +165,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the Reserved Flag. See MQTT Spec for more details on this flag.
-     * 
+     *
      * @return
      */
     public boolean getReservedFlag() {

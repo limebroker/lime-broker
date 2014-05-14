@@ -9,21 +9,17 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.limebroker.broker.LimeBrokerException;
-import com.limebroker.broker.protocol.mqtt.Util;
-import com.limebroker.broker.protocol.mqtt.message.header.FixedHeader;
-import com.limebroker.broker.protocol.mqtt.message.header.MessageIDHeader;
 
 /**
  * Message ID Header Tests
- * 
+ *
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- * 
+ *
  */
 public class MessageIdHeaderTest {
 
     @Test
-    public void readMessageIdHeaderTest() throws IOException,
-            LimeBrokerException {
+    public void readMessageIdHeaderTest() throws IOException, LimeBrokerException {
         ByteBuf buf = Unpooled.buffer();
         try {
             buf.writeShort(52);

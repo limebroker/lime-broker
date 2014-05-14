@@ -1,11 +1,10 @@
 package com.limebroker.broker.protocol.mqtt.message.header;
 
 /**
- * MessageType Enum represents MQTT Connect Return Code Type of the ConnectAck
- * Header
- * 
+ * MessageType Enum represents MQTT Connect Return Code Type of the ConnectAck Header
+ *
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- * 
+ *
  */
 public enum ConnectReturnCode {
 
@@ -38,9 +37,8 @@ public enum ConnectReturnCode {
     }
 
     /**
-     * Returns a Connect Return Code from the connect return code byte of the
-     * Connect Acknowledgement Header.
-     * 
+     * Returns a Connect Return Code from the connect return code byte of the Connect Acknowledgement Header.
+     *
      * @param code
      * @return
      */

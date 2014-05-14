@@ -4,13 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.limebroker.broker.protocol.mqtt.message.header.QoSLevel;
-
 /**
  * MessageType Tests
- * 
+ *
  * @author Martyn Taylor <mtaylor@redhat.com>
- * 
+ *
  */
 public class QoSLevelTest {
 
