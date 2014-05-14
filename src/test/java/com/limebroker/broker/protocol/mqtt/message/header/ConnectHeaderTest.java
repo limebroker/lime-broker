@@ -1,4 +1,4 @@
-package com.limebroker.broker.protocol.mqtt.header;
+package com.limebroker.broker.protocol.mqtt.message.header;
 
 import static org.junit.Assert.assertEquals;
 import io.netty.buffer.ByteBuf;
