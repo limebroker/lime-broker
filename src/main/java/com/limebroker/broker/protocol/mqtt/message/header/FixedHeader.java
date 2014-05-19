@@ -6,9 +6,9 @@ import com.limebroker.broker.LimeBrokerException;
 
 /**
  * Represents Fixed Header component of any MQTT Message.
- *
+ * 
  * @author Martyn Taylor <mtaylor@redhat.com>
- *
+ * 
  */
 public class FixedHeader {
 
@@ -23,7 +23,7 @@ public class FixedHeader {
 
     /**
      * Creates new Fixed Header instance by reading header from ByteBuf.
-     *
+     * 
      * @param buf
      * @return
      * @throws LimeBrokerException
@@ -37,7 +37,7 @@ public class FixedHeader {
 
     /**
      * Creates new Fixed Header instance by setting byte flags and remaining length.
-     *
+     * 
      * @param buf
      * @return
      * @throws LimeBrokerException
@@ -51,7 +51,7 @@ public class FixedHeader {
 
     /**
      * Converts an integer to the variable length encoding of MQTT and writes the result to buffer
-     *
+     * 
      * @param length
      * @return byte[]
      * @throws LimeBrokerException
@@ -70,7 +70,7 @@ public class FixedHeader {
 
     /**
      * Converts an integer to the variable length encoding of MQTT and writes the result to buffer
-     *
+     * 
      * @param length
      * @return byte[]
      * @throws LimeBrokerException
@@ -90,7 +90,7 @@ public class FixedHeader {
 
     /**
      * Returns the number of bytes needed to encode the remainingLength
-     *
+     * 
      * @param length
      * @return
      * @throws LimeBrokerException
@@ -104,7 +104,7 @@ public class FixedHeader {
 
     /**
      * Gets the Message Type of this MQTT Message Header
-     *
+     * 
      * @return
      */
     public MessageType getMessageType() {
@@ -113,7 +113,7 @@ public class FixedHeader {
 
     /**
      * Gets the QoSLevel of this MQTT Message Header
-     *
+     * 
      * @return
      */
     public QoSLevel getQoSLevel() {
@@ -122,7 +122,7 @@ public class FixedHeader {
 
     /**
      * Get the retain flag of this MQTT Message Header
-     *
+     * 
      * @return
      */
     public boolean getRetain() {
@@ -131,7 +131,7 @@ public class FixedHeader {
 
     /**
      * Get the Duplicate flag of this MQTT Message Header
-     *
+     * 
      * @return
      */
     public boolean getDupFlag() {
@@ -140,10 +140,23 @@ public class FixedHeader {
 
     /**
      * Get the Remaining Length in bytes for the MQTT Message.
-     *
+     * 
      * @return
      */
     public int getRemainingLength() {
         return remainingLength;
+    }
+
+    /**
+     * Get the size of the Fixed Header either 2 or 4 bytes
+     * 
+     */
+    public byte getSize() {
+        return (byte) ((remainingLength > 127) ? 4 : 2);
+    }
+
+    public void write(ByteBuf buf) throws LimeBrokerException {
+        buf.writeByte(byte1);
+        FixedHeader.encodeRemainingLength(remainingLength, buf);
     }
 }

@@ -2,6 +2,7 @@ package com.limebroker.broker.protocol.mqtt.message.header;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 
 import java.io.IOException;
 
@@ -10,9 +11,9 @@ import com.limebroker.broker.protocol.mqtt.Util;
 
 /**
  * Represents a variable header of a CONNECT message
- *
+ * 
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- *
+ * 
  */
 public class ConnectHeader extends VariableHeader {
 
@@ -35,7 +36,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Creates a new Connect Header based on the given paramaters.
-     *
+     * 
      * @param connectFlags
      * @param keepAliveTimer
      * @return
@@ -51,7 +52,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Read a connect header from a ByteBuf bytes and create a Connect Header object
-     *
+     * 
      * @param buf
      * @return
      * @throws LimeBrokerException
@@ -75,7 +76,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the Connect message Keep Alive Timer for this connect message.
-     *
+     * 
      * @return
      */
     public int getKeepAliveTimer() {
@@ -84,7 +85,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the Protocol Name for this Connect Message. Should always be MQIsdp.
-     *
+     * 
      * @return
      */
     public String getProtocolName() {
@@ -93,7 +94,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the protocol version of this connect message.
-     *
+     * 
      * @return
      */
     public byte getProtocolVersion() {
@@ -102,7 +103,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the all connect flags as byte for this connect header.
-     *
+     * 
      * @return
      */
     public byte getConnectFlags() {
@@ -111,7 +112,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the will quality of service level for this connect message. See MQTT Spec for more details on this flag.
-     *
+     * 
      * @return
      */
     public QoSLevel getWillQoS() {
@@ -120,7 +121,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Gets the username flag. See MQTT Spec for more details on this flag.
-     *
+     * 
      * @return
      */
     public boolean getUsernameFlag() {
@@ -129,7 +130,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Returns password flag. See MQTT Spec for more details on this flag.
-     *
+     * 
      * @return
      */
     public boolean getPasswordFlag() {
@@ -138,7 +139,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Returns Will Retain Flag. See MQTT Spec for more details on this flag.
-     *
+     * 
      * @return
      */
     public boolean getWillRetainFlag() {
@@ -147,7 +148,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Returns the Will Flag. See MQTT Spec for more details on this flag.
-     *
+     * 
      * @return
      */
     public boolean getWillFlag() {
@@ -156,7 +157,7 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Returns the clean session flag. See MQTT Spec for more details on this flag.
-     *
+     * 
      * @return
      */
     public boolean getCleanSessionFlag() {
@@ -165,10 +166,29 @@ public class ConnectHeader extends VariableHeader {
 
     /**
      * Get the Reserved Flag. See MQTT Spec for more details on this flag.
-     *
+     * 
      * @return
      */
     public boolean getReservedFlag() {
         return Util.getBooleanFlagFromByte(connectFlags, (byte) 0b00000001);
+    }
+
+    /**
+     * Writes this Connect Header out to ByteBuf
+     * 
+     * @param buf
+     * @throws IOException
+     */
+    public void write(ByteBuf buf) throws IOException {
+        ByteBufOutputStream bbos = new ByteBufOutputStream(buf);
+        try {
+            bbos.writeUTF(PROTOCOL_NAME);
+            buf.writeByte(PROTOCOL_VERSION);
+            buf.writeByte(connectFlags);
+            buf.writeChar((char) keepAliveTimer);
+            bbos.flush();
+        } finally {
+            bbos.close();
+        }
     }
 }

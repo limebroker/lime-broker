@@ -13,9 +13,9 @@ import com.limebroker.broker.LimeBrokerException;
 
 /**
  * ConnectHeader Tests
- *
+ * 
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- *
+ * 
  */
 public class ConnectHeaderTest {
 
