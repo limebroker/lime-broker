@@ -12,9 +12,9 @@ import com.limebroker.broker.LimeBrokerException;
 
 /**
  * Message ID Header Tests
- *
+ * 
  * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
- *
+ * 
  */
 public class MessageIdHeaderTest {
 
@@ -23,7 +23,7 @@ public class MessageIdHeaderTest {
         ByteBuf buf = Unpooled.buffer();
         try {
             buf.writeShort(52);
-            FixedHeader fh = FixedHeader.createFixedHeader((byte) 3, 0);
+            FixedHeader fh = new FixedHeader((byte) 3, 0);
             MessageIDHeader midh = MessageIDHeader.readMessageIDHeader(buf, fh);
             assertEquals(52, midh.getMessageId());
         } finally {

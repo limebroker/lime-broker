@@ -3,6 +3,7 @@ package com.limebroker.broker.protocol.mqtt.message.header;
 import io.netty.buffer.ByteBuf;
 
 import com.limebroker.broker.LimeBrokerException;
+import com.limebroker.broker.protocol.mqtt.exception.MalformedMessageException;
 
 /**
  * Represents Fixed Header component of any MQTT Message.
@@ -22,17 +23,18 @@ public class FixedHeader {
     private int remainingLength;
 
     /**
-     * Creates new Fixed Header instance by reading header from ByteBuf.
+     * Decodes a FixedHeader object from the ByteBuf
      * 
      * @param buf
      * @return
      * @throws LimeBrokerException
      */
-    public static FixedHeader readFixedHeader(ByteBuf buf) throws LimeBrokerException {
-        FixedHeader fh = new FixedHeader();
-        fh.byte1 = buf.readByte();
-        fh.remainingLength = decodeRemainingLength(buf);
-        return fh;
+    public static FixedHeader decode(ByteBuf buf) throws LimeBrokerException {
+        try {
+            return new FixedHeader(buf.readByte(), decodeRemainingLength(buf));
+        } catch (IndexOutOfBoundsException e) {
+            throw new MalformedMessageException("Unable to decode Fixed Header");
+        }
     }
 
     /**
@@ -42,11 +44,20 @@ public class FixedHeader {
      * @return
      * @throws LimeBrokerException
      */
-    public static FixedHeader createFixedHeader(byte byte1, int remainingLength) throws LimeBrokerException {
-        FixedHeader fh = new FixedHeader();
-        fh.byte1 = byte1;
-        fh.remainingLength = remainingLength;
-        return fh;
+    public FixedHeader(byte byte1, int remainingLength) throws LimeBrokerException {
+        this.byte1 = byte1;
+        this.remainingLength = remainingLength;
+    }
+
+    /**
+     * Encode this Fixed Header onto ByteBuf
+     * 
+     * @param buf
+     * @throws LimeBrokerException
+     */
+    public void encode(ByteBuf buf) throws LimeBrokerException {
+        buf.writeByte(byte1);
+        FixedHeader.encodeRemainingLength(remainingLength, buf);
     }
 
     /**
@@ -153,10 +164,5 @@ public class FixedHeader {
      */
     public byte getSize() {
         return (byte) ((remainingLength > 127) ? 4 : 2);
-    }
-
-    public void write(ByteBuf buf) throws LimeBrokerException {
-        buf.writeByte(byte1);
-        FixedHeader.encodeRemainingLength(remainingLength, buf);
     }
 }

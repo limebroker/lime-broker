@@ -2,12 +2,16 @@ package com.limebroker.broker;
 
 /**
  * LimeBrokerException
- *
+ * 
  * @author Martyn Taylor <mtaylor@redhat.com>
- *
+ * 
  */
 public class LimeBrokerException extends Exception {
     private static final long serialVersionUID = 1L;
+
+    public LimeBrokerException(String msg, Throwable t) {
+        super(msg, t);
+    }
 
     public LimeBrokerException(String msg) {
         super(msg);

@@ -17,7 +17,6 @@ import com.limebroker.broker.protocol.mqtt.message.header.FixedHeader;
 
 public class ConnectPayloadTest {
 
-    private ByteBuf buf;
     private ByteBuf header;
     private ByteBuf payload;
 
@@ -30,7 +29,7 @@ public class ConnectPayloadTest {
     private String password;
 
     @Before
-    public void setUp() throws Exception {
+    public void decodeSetup() throws Exception {
         header = Unpooled.buffer();
         payload = Unpooled.buffer();
         bbos = new ByteBufOutputStream(payload);
@@ -51,18 +50,17 @@ public class ConnectPayloadTest {
 
     /**
      * Tests that ConnectPayload with all flags and correct remainingLength and entrys is read correctly.
-     *
+     * 
      * @throws Exception
      */
     @Test
-    public void readConnectPayloadWithAllFlagsTest() throws Exception {
-        ConnectHeader connectHeader = ConnectHeader.getConnectHeader((byte) 0b11001110, 1);
+    public void decodeConnectPayloadWithAllFlagsTest() throws Exception {
+        ConnectHeader connectHeader = new ConnectHeader((byte) 0b11001110, 1);
         writeStringsToBuf(clientId, willTopic, willMessage, username, password);
 
         FixedHeader fh = writeFixedHeader((byte) 0b00010000);
 
-        buf = Unpooled.wrappedBuffer(header, payload);
-        ConnectPayload p = ConnectPayload.readConnectPayload(payload, connectHeader, fh);
+        ConnectPayload p = ConnectPayload.decode(payload, connectHeader, fh);
         assertEquals(clientId, p.getClientId());
         assertEquals(willTopic, p.getWillTopic());
         assertEquals(willMessage, p.getWillMessage());
@@ -72,21 +70,20 @@ public class ConnectPayloadTest {
 
     /**
      * Tests case outlined in v3.1 spec:
-     *
+     * 
      * Note that, for compatibility with the original MQTT V3 specification, the Remaining Length field from the fixed header
      * takes precedence over the User Name flag. Server implementations must allow for the possibility that the User Name flag
      * is set, but the User Name string is missing. This is valid, and connections should be allowed to continue.
-     *
+     * 
      * @throws Exception
      */
     @Test
-    public void readConnectPayloadWithIncorrectRemainingLengthOnUsernameTest() throws Exception {
-        ConnectHeader connectHeader = ConnectHeader.getConnectHeader((byte) 0b11001110, 1);
+    public void decodeConnectPayloadWithIncorrectRemainingLengthOnUsernameTest() throws Exception {
+        ConnectHeader connectHeader = new ConnectHeader((byte) 0b11001110, 1);
         writeStringsToBuf(clientId, willTopic, willMessage);
         FixedHeader fh = writeFixedHeader((byte) 0b00010000);
 
-        buf = Unpooled.wrappedBuffer(header, payload);
-        ConnectPayload p = ConnectPayload.readConnectPayload(payload, connectHeader, fh);
+        ConnectPayload p = ConnectPayload.decode(payload, connectHeader, fh);
         assertEquals(clientId, p.getClientId());
         assertEquals(willTopic, p.getWillTopic());
         assertEquals(willMessage, p.getWillMessage());
@@ -95,27 +92,41 @@ public class ConnectPayloadTest {
 
     /**
      * Tests case outlined in v3.1 spec:
-     *
+     * 
      * Note that, for compatibility with the original MQTT V3 specification, the Remaining Length field from the fixed header
      * takes precedence over the Password flag. Server implementations must allow for the possibility that the Password flag is
      * set, but the Password string is missing. This is valid, and connections should be allowed to continue.
-     *
+     * 
      * @throws Exception
      */
     @Test
-    public void readConnectPayloadWithIncorrectRemainingLengthOnPasswordTest() throws Exception {
+    public void decodeConnectPayloadWithIncorrectRemainingLengthOnPasswordTest() throws Exception {
         // Set Use
-        ConnectHeader connectHeader = ConnectHeader.getConnectHeader((byte) 0b11001110, 1);
+        ConnectHeader connectHeader = new ConnectHeader((byte) 0b11001110, 1);
         writeStringsToBuf(clientId, willTopic, willMessage, username);
         FixedHeader fh = writeFixedHeader((byte) 0b00010000);
 
-        buf = Unpooled.wrappedBuffer(header, payload);
-        ConnectPayload p = ConnectPayload.readConnectPayload(payload, connectHeader, fh);
+        ConnectPayload p = ConnectPayload.decode(payload, connectHeader, fh);
         assertEquals(clientId, p.getClientId());
         assertEquals(willTopic, p.getWillTopic());
         assertEquals(willMessage, p.getWillMessage());
         assertEquals(username, p.getUsername());
         assertEquals(null, p.getPassword());
+    }
+
+    @Test
+    public void encodeWithAllFlagsTest() throws LimeBrokerException, IOException {
+        ConnectHeader connectHeader = new ConnectHeader((byte) 0b11001110, 1);
+        ConnectPayload cp = new ConnectPayload(connectHeader, clientId, willTopic, willMessage, username, password);
+        cp.encode(payload);
+
+        FixedHeader fixedHeader = new FixedHeader((byte) 0b00011111, payload.readableBytes());
+        ConnectPayload connectPayload = ConnectPayload.decode(payload, connectHeader, fixedHeader);
+        assertEquals(clientId, connectPayload.getClientId());
+        assertEquals(willTopic, connectPayload.getWillTopic());
+        assertEquals(willMessage, connectPayload.getWillMessage());
+        assertEquals(username, connectPayload.getUsername());
+        assertEquals(password, connectPayload.getPassword());
     }
 
     private void writeStringsToBuf(String... strings) throws IOException {
@@ -126,8 +137,8 @@ public class ConnectPayloadTest {
     }
 
     private FixedHeader writeFixedHeader(byte flags) throws LimeBrokerException {
-        FixedHeader h = FixedHeader.createFixedHeader(flags, payload.readableBytes());
-        h.write(header);
+        FixedHeader h = new FixedHeader(flags, payload.readableBytes());
+        h.encode(header);
         return h;
     }
 }

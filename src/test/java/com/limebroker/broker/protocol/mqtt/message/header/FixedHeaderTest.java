@@ -15,9 +15,9 @@ import com.limebroker.broker.LimeBrokerException;
 
 /**
  * FixedHeader Tests
- *
+ * 
  * @author Martyn Taylor <mtaylor@redhat.com>
- *
+ * 
  */
 public class FixedHeaderTest {
     private Map<Integer, byte[]> generateRequiredLengthTestData() {
@@ -63,10 +63,10 @@ public class FixedHeaderTest {
     @Test
     public void getRetainTest() {
         try {
-            FixedHeader fh = FixedHeader.createFixedHeader((byte) 0b00001111, 0);
+            FixedHeader fh = new FixedHeader((byte) 0b00001111, 0);
             assertEquals(true, fh.getRetain());
 
-            fh = FixedHeader.createFixedHeader((byte) 0b0000110, 0);
+            fh = new FixedHeader((byte) 0b0000110, 0);
             assertEquals(false, fh.getRetain());
         } catch (Exception e) {
             fail(e.getStackTrace().toString());
@@ -76,10 +76,10 @@ public class FixedHeaderTest {
     @Test
     public void getDupFlagTest() {
         try {
-            FixedHeader fh = FixedHeader.createFixedHeader((byte) 0b11111000, 0);
+            FixedHeader fh = new FixedHeader((byte) 0b11111000, 0);
             assertEquals(true, fh.getDupFlag());
 
-            fh = FixedHeader.createFixedHeader((byte) 0b1000110, 0);
+            fh = new FixedHeader((byte) 0b1000110, 0);
             assertEquals(false, fh.getDupFlag());
         } catch (Exception e) {
             fail(e.getStackTrace().toString());
